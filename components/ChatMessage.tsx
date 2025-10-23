@@ -1,4 +1,3 @@
-
 import type React from 'react';
 import type { Message } from '../types';
 import { BodyweightIcon } from '../constants'; // Using one icon as a generic Bot icon
@@ -6,6 +5,29 @@ import { BodyweightIcon } from '../constants'; // Using one icon as a generic Bo
 interface ChatMessageProps {
   message: Message;
 }
+
+const renderTextWithLinks = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+
+    return parts.map((part, index) => {
+        if (part.match(urlRegex)) {
+            return (
+                <a
+                    key={index}
+                    href={part}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sky-600 hover:underline"
+                >
+                    {part}
+                </a>
+            );
+        }
+        return part;
+    });
+};
+
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const isUser = message.sender === 'user';
@@ -24,7 +46,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
             : 'bg-white text-gray-800 rounded-bl-none'
         }`}
       >
-        {message.text && <p className="text-sm">{message.text}</p>}
+        {message.text && <p className="text-sm whitespace-pre-wrap break-words">{renderTextWithLinks(message.text)}</p>}
         {message.component && <div>{message.component}</div>}
       </div>
     </div>

@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ChatMessage from './components/ChatMessage';
 import Sidebar from './components/Sidebar';
@@ -40,7 +39,7 @@ const App: React.FC = () => {
   }, []);
   
   useEffect(() => {
-      addMessage('bot', '¡Hola! Soy FitBot, tu entrenador personal de IA. Escribe "quiero hacer ejercicio" para empezar.');
+      addMessage('bot', '¡Hola! 👋 Soy FitBot, tu entrenador personal de IA. Escribe "quiero hacer ejercicio" para empezar. 💪');
   }, [addMessage]);
   
   const handleTimeSelect = (time: number) => {
@@ -51,7 +50,7 @@ const App: React.FC = () => {
     setTimeout(() => {
         addMessage(
             'bot',
-            '¡Perfecto! Ahora, selecciona el equipamiento que tienes disponible.',
+            '¡Perfecto! 👍 Ahora, selecciona el equipamiento que tienes disponible. 🏋️‍♀️',
             <IconSelector onSelect={handleEquipmentSelect} />
         );
         setConversationState(ConversationState.AWAITING_EQUIPMENT);
@@ -67,7 +66,7 @@ const App: React.FC = () => {
     setTimeout(() => {
         addMessage(
             'bot',
-            'Genial. Para personalizar tu rutina, necesito algunos datos más.',
+            'Genial. 👍 Para personalizar tu rutina, necesito algunos datos más. 📝',
             <ProfileForm onSubmit={handleProfileSubmit} />
         );
         setConversationState(ConversationState.AWAITING_PROFILE);
@@ -91,13 +90,13 @@ const App: React.FC = () => {
         });
         addMessage(
             'bot',
-            'He preparado estas opciones para ti. Selecciona un ejercicio para ver las instrucciones detalladas.',
+            '¡Listo! ✅ He preparado estas opciones para ti. Selecciona un ejercicio para ver las instrucciones detalladas. 👇',
             <ExerciseList exercises={result.data.exercises} onSelect={handleExerciseSelect} />
         );
         setConversationState(ConversationState.AWAITING_EXERCISE_SELECTION);
     } catch (error) {
         console.error(error);
-        addMessage('bot', 'Lo siento, he tenido un problema al generar tus ejercicios. Por favor, intenta de nuevo.');
+        addMessage('bot', 'Lo siento, he tenido un problema al generar tus ejercicios. 😥 Por favor, intenta de nuevo.');
         setConversationState(ConversationState.IDLE);
     } finally {
         setIsLoading(false);
@@ -112,12 +111,12 @@ const App: React.FC = () => {
 
     try {
         const instructions = await getExerciseInstructions(exercise.name, workoutParams);
-        addMessage('bot', `¡Claro! Aquí tienes cómo hacer "${exercise.name}":\n\n${instructions}`);
-        addMessage('bot', '¡Has completado tu planificación! Si quieres otra rutina, escribe "quiero hacer ejercicio".');
+        addMessage('bot', `¡Excelente elección! 🤸‍♀️ Aquí tienes cómo hacer "${exercise.name}":\n\n${instructions}`);
+        addMessage('bot', '¡Has completado tu planificación! 🎉 Si quieres otra rutina, escribe "quiero hacer ejercicio".');
         setConversationState(ConversationState.AWAITING_GREETING);
     } catch (error) {
         console.error(error);
-        addMessage('bot', 'No pude obtener las instrucciones. Intenta seleccionar otro ejercicio.');
+        addMessage('bot', 'Ups, no pude obtener las instrucciones. 😥 Intenta seleccionar otro ejercicio.');
         setConversationState(ConversationState.AWAITING_EXERCISE_SELECTION); // Revert to allow another choice
     } finally {
         setIsLoading(false);
@@ -130,20 +129,20 @@ const App: React.FC = () => {
         setTimeout(() => {
             addMessage(
                 'bot',
-                '¡Hola! Soy tu asistente de fitness. ¿Cuánto tiempo tienes para entrenar hoy?',
+                '¡Claro! 👍 ¿Cuánto tiempo tienes para entrenar hoy? ⏱️',
                 <TimeSelector onSelect={handleTimeSelect} />
             );
             setConversationState(ConversationState.AWAITING_TIME);
         }, 500);
     } else {
         setTimeout(() => {
-            addMessage('bot', 'No te he entendido. Si quieres empezar, escribe "quiero hacer ejercicio".');
+            addMessage('bot', 'No te he entendido. 🤔 Si quieres empezar, escribe "quiero hacer ejercicio".');
         }, 500);
     }
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col font-sans bg-gradient-to-br from-yellow-200 via-lime-200 to-sky-300">
+    <div className="h-screen w-screen flex flex-col font-sans bg-gradient-to-br from-slate-200 via-yellow-100 to-orange-200">
       <main className="flex-grow flex flex-col md:flex-row p-4 gap-4 overflow-hidden">
         <div className="flex-grow flex flex-col bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200">
           <div className="flex-grow p-4 overflow-y-auto">

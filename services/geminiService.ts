@@ -1,4 +1,3 @@
-
 import { GoogleGenAI } from "@google/genai";
 import type { WorkoutParams } from "../types";
 
@@ -54,20 +53,26 @@ export const getExerciseSuggestions = async (params: WorkoutParams) => {
 
 export const getExerciseInstructions = async (exerciseName: string, params: WorkoutParams) => {
     const prompt = `
+        Actúa como un entrenador personal amigable y motivador. Usa emoticones para hacer el texto más atractivo.
+
         Proporciona instrucciones detalladas, paso a paso, para realizar el ejercicio "${exerciseName}".
         Adapta las instrucciones para una persona con el siguiente perfil:
         - Edad: ${params.age}
         - Género: ${params.gender}
         - Nivel de actividad física: ${params.activityLevel}
-        - Duración total del entrenamiento: ${params.time} minutos
 
-        Formatea las instrucciones como una lista numerada (ej. 1. Comienza de pie...). No agregues títulos ni texto introductorio, solo la lista de pasos.
+        Después de las instrucciones, busca en la web y encuentra un video de YouTube de alta calidad que demuestre cómo hacer el ejercicio correctamente. Incluye el enlace completo de YouTube al final de tu respuesta bajo el título "🎥 Video de referencia:".
+
+        Formatea las instrucciones como una lista numerada (ej. 1. Comienza de pie... 🧍‍♂️). No agregues títulos ni texto introductorio antes de la lista de pasos, solo la lista y el enlace del video al final.
     `;
 
     // Fix: Call generateContent directly on ai.models as per guidelines.
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: prompt
+        contents: prompt,
+        config: {
+            tools: [{ googleSearch: {} }],
+        }
     });
 
     return response.text;
