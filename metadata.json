@@ -1,0 +1,5 @@
+{
+  "name": "FitBot AI Trainer",
+  "description": "An AI-powered chatbot that generates personalized workout plans based on your available time, equipment, and fitness profile. It provides step-by-step exercise instructions and tracks estimated calorie burn.",
+  "requestFramePermissions": []
+}
