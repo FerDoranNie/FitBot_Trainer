@@ -8,6 +8,9 @@ import { ConversationState } from './types';
 import type { Message, WorkoutParams, SidebarData, Exercise, Equipment } from './types';
 import { EQUIPMENT_OPTIONS, ACTIVITY_LEVELS } from './constants';
 
+// SVG pattern for the background, inspired by Telegram doodles and birds theme
+const birdPattern = `data:image/svg+xml;utf8,<svg width="60" height="60" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><path d="M22.5,15.6c-1.6-1.6-3.6-2.4-5.8-2.4s-4.2,0.8-5.8,2.4l-1.1,1.1l-1.1-1.1c-0.3-0.3-0.7-0.3-1,0c-0.3,0.3-0.3,0.7,0,1l1.1,1.1l-1.1,1.1c-0.3,0.3-0.3,0.7,0,1c0.1,0.1,0.3,0.2,0.5,0.2s0.4-0.1,0.5-0.2l1.1-1.1l1.1,1.1c1.6,1.6,3.6,2.4,5.8,2.4s4.2-0.8,5.8-2.4l1.1-1.1l1.1,1.1c0.1,0.1,0.3,0.2,0.5,0.2s0.4-0.1,0.5-0.2c0.3-0.3,0.3-0.7,0-1l-1.1-1.1l1.1-1.1c0.3-0.3,0.3-0.7,0-1C23.2,15.3,22.8,15.3,22.5,15.6z M11.5,19.5c-1.6,0-3.1-0.6-4.2-1.8l-1.1-1.1l1.1-1.1c1.2-1.2,2.6-1.8,4.2-1.8c1.6,0,3.1,0.6,4.2,1.8l1.1,1.1l-1.1,1.1C14.6,18.9,13.1,19.5,11.5,19.5z M20.5,19.5c-1.6,0-3.1-0.6-4.2-1.8l-1.1-1.1l1.1-1.1c1.2-1.2,2.6-1.8,4.2-1.8c1.6,0,3.1,0.6,4.2,1.8l1.1,1.1l-1.1,1.1C23.6,18.9,22.1,19.5,20.5,19.5z" fill="%23bae6fd" /></svg>`;
+
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [conversationState, setConversationState] = useState<ConversationState>(ConversationState.AWAITING_GREETING);
@@ -27,7 +30,11 @@ const App: React.FC = () => {
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // A small delay ensures the DOM has updated before scrolling, fixing issues on mobile
+    // where the layout might take a moment to settle after new content is added.
+    setTimeout(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   useEffect(() => {
@@ -142,10 +149,13 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col font-sans bg-gradient-to-br from-slate-200 via-yellow-100 to-orange-200">
-      <main className="flex-grow flex flex-col md:flex-row p-4 gap-4 overflow-hidden">
-        <div className="flex-grow flex flex-col bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200">
-          <div className="flex-grow p-4 overflow-y-auto">
+    <div 
+        className="h-screen w-screen flex flex-col font-sans bg-sky-50"
+        style={{ backgroundImage: `url("${birdPattern}")` }}
+    >
+      <main className="flex-grow flex flex-col md:flex-row p-4 gap-4 overflow-y-auto md:overflow-hidden">
+        <div className="flex flex-col md:grow bg-slate-100/50 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50">
+          <div className="p-4 md:grow md:overflow-y-auto">
             {messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
             {isLoading && <LoadingIndicator />}
             <div ref={chatEndRef} />
@@ -157,7 +167,7 @@ const App: React.FC = () => {
             enabled={conversationState === ConversationState.AWAITING_GREETING}
           />
         </div>
-        <Sidebar data={sidebarData} />
+        {sidebarData.estimatedCalories && <Sidebar data={sidebarData} />}
       </main>
     </div>
   );
@@ -187,7 +197,7 @@ const IconSelector: React.FC<{ onSelect: (equipment: string[]) => void }> = ({ o
         <div className="mt-2">
             <div className="grid grid-cols-2 gap-3">
                 {EQUIPMENT_OPTIONS.map(eq => (
-                    <button key={eq.id} onClick={() => toggleSelection(eq.id)} className={`p-3 border rounded-lg flex flex-col items-center gap-2 transition-all ${selected.includes(eq.id) ? 'bg-teal-100 border-teal-400 ring-2 ring-teal-300' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'}`}>
+                    <button key={eq.id} onClick={() => toggleSelection(eq.id)} className={`p-3 border rounded-lg flex flex-col items-center gap-2 transition-all ${selected.includes(eq.id) ? 'bg-sky-100 border-sky-400 ring-2 ring-sky-300' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'}`}>
                         {eq.icon}
                         <span className="text-xs font-medium">{eq.name}</span>
                     </button>
@@ -244,8 +254,8 @@ const ExerciseList: React.FC<{ exercises: Exercise[]; onSelect: (exercise: Exerc
     return (
         <div className="space-y-2 mt-2">
             {exercises.map(exercise => (
-                <button key={exercise.name} onClick={() => onSelect(exercise)} className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-teal-50 hover:border-teal-300 transition-all focus:outline-none focus:ring-2 focus:ring-teal-300">
-                    <h4 className="font-bold text-teal-800">{exercise.name}</h4>
+                <button key={exercise.name} onClick={() => onSelect(exercise)} className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-sky-50 hover:border-sky-300 transition-all focus:outline-none focus:ring-2 focus:ring-sky-300">
+                    <h4 className="font-bold text-sky-800">{exercise.name}</h4>
                     <p className="text-xs text-gray-600 mt-1">{exercise.description}</p>
                 </button>
             ))}

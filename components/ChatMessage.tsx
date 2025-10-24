@@ -35,14 +35,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   return (
     <div className={`flex items-end gap-2 my-2 ${isUser ? 'justify-end' : 'justify-start'}`}>
       {!isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-teal-200 flex items-center justify-center text-teal-700">
+        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white text-sky-600 flex items-center justify-center">
            <BodyweightIcon className="w-5 h-5"/>
         </div>
       )}
       <div
         className={`max-w-md md:max-w-lg px-4 py-3 rounded-2xl shadow-md ${
           isUser
-            ? 'bg-lime-200 text-gray-800 rounded-br-none'
+            ? 'bg-sky-200 text-gray-800 rounded-br-none'
             : 'bg-white text-gray-800 rounded-bl-none'
         }`}
       >
